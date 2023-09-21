@@ -10,17 +10,19 @@ namespace Slide.Web
     {
         public string PullURL { get; set; }
 
-        public CacheHttp(string defaultValue, string defaultPullURL) : base(defaultValue)
+        public CacheHttp(string defaultName, string defaultValue, string defaultPullURL) : base(defaultName, defaultValue)
         {
             _cache = defaultValue;
+            Name = defaultName;
             PullURL = defaultPullURL;
 
             RefreshArray();
         }
 
-        public CacheHttp(string defaultValue) : base(defaultValue)
+        public CacheHttp(string defaultName, string defaultValue) : base(defaultName, defaultValue)
         {
             _cache = defaultValue;
+            Name= defaultName;
             PullURL = "";
 
             RefreshArray();

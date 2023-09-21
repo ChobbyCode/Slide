@@ -43,26 +43,37 @@ namespace Slide
         internal DateTime _cacheUpdateTime { get; set; }
 
 
-        public Cache(dynamic defaultValue) {
+        public Cache(string defaultName, dynamic defaultValue) {
             // Sets default variables. Cache is not set by default so it can be null,
             // and cache create time can be set
             RecacheTime = 0;
             _cacheUpdateTime = DateTime.Now;
             CacheValue = "";
 
+            Name = defaultName;
+
             _cache = defaultValue;
 
             RefreshArray();
 
-            FileWritter fileWritter = new FileWritter();
-
-            if (!_read)
-            {
-                Console.WriteLine(fileWritter.ReadPreCache(@"C:\Users\jacob\Temp\Slide\Cache\HttpCache.json", this).CacheValue);
-            } 
+            SetValues();
         }
 
-        public Cache() {
+        public Cache(string defaultName) {
+            RecacheTime = 0;
+            _cacheUpdateTime = DateTime.Now;
+            CacheValue = "";
+            Name = defaultName; 
+
+            _cache = "";
+
+            RefreshArray();
+
+            SetValues();
+        }
+
+        public Cache()
+        {
             RecacheTime = 0;
             _cacheUpdateTime = DateTime.Now;
             CacheValue = "";
@@ -71,6 +82,35 @@ namespace Slide
 
             RefreshArray();
         }
+
+        public virtual void SetValues()
+        {
+
+            FileWritter fileWritter = new FileWritter();
+
+            if (File.Exists($@"C:\Users\jacob\Temp\Slide\Cache\{Name}.json"))
+            {
+                _read = true;
+            }
+
+            if (_read)
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    string path = $@"C:\Users\jacob\Temp\Slide\Cache\{Name}.json";
+
+                    _cache = fileWritter.ReadPreCache(path, this).CacheValue;
+                    AllowHardOverride = fileWritter.ReadPreCache(path, this).AllowHardOverride;
+                    AutoWriteCache = fileWritter.ReadPreCache(path, this).AutoWriteCache;
+                    RecacheTime = fileWritter.ReadPreCache(path, this).RecacheTime;
+                    CacheValue = fileWritter.ReadPreCache(path, this).CacheValue;
+                    //_partOfArray = fileWritter.ReadPreCache(path, this)._partOfArray;
+                    _read = fileWritter.ReadPreCache(path, this)._read;
+                    CacheStoreType = fileWritter.ReadPreCache(path, this).CacheStoreType;
+                }
+            }
+        }
+
 
         public virtual bool Recachable()
         {

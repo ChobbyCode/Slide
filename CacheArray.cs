@@ -22,7 +22,7 @@ namespace Slide
 
         public List<Cache> ArrayValue { get; set; } = new List<Cache>();
 
-        public CacheArray(List<Cache> DefaultValue)
+        public CacheArray(string defaultName, List<Cache> DefaultValue)
         {
             RefreshArray();
 
@@ -30,6 +30,8 @@ namespace Slide
             _cacheList = DefaultValue;
 
             RefreshArray();
+
+            Name = defaultName;
         }
 
         public IEnumerable<Cache> GetCacheList()

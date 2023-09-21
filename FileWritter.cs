@@ -105,10 +105,10 @@ namespace Slide
             }
         }
 
-        [SupportedOSPlatform ("windows")]
-        internal Cache ReadPreCache(string loc, Cache old)
+        /*[SupportedOSPlatform ("windows")]*/
+        public Cache ReadPreCache(string loc, Cache old)
         {
-            if (old._read)
+            if (!old._read)
             {
                 return old;
             }

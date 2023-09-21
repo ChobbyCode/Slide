@@ -32,7 +32,7 @@ namespace Slide
        /// <summary>
        /// Used for writting Cache
        /// </summary>
-        public static void WriteCache(this Cache cache)
+        public static string WriteCache(this Cache cache)
         {
             if (OperatingSystem.IsWindows())
             {
@@ -44,7 +44,7 @@ namespace Slide
                 fileWritter.CreateSubDomains(CacheFolder);
                 fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
 
-                return;
+                return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
             }
 
             throw new Exception($"An instance of 'Slide.CacheConstructor' tried to call a function that is not supported on your Operating System: Write your own WriteFile function if you want to use WriteCache.");
@@ -54,7 +54,7 @@ namespace Slide
         /// <summary>
         /// Used for writting CacheArray
         /// </summary>
-        public static void WriteCache(this CacheArray cache)
+        public static string WriteCache(this CacheArray cache)
         {
             if (OperatingSystem.IsWindows())
             {
@@ -66,7 +66,7 @@ namespace Slide
                 fileWritter.CreateSubDomains(CacheFolder);
                 fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
 
-                return;
+                return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
             }
 
             throw new Exception($"An instance of 'Slide.CacheConstructor' tried to call a function that is not supported on your Operating System: Write your own WriteFile function if you want to use WriteCache.");
@@ -79,7 +79,7 @@ namespace Slide
         {
             try
             {
-                Cache convert = new Cache(Convert.ToDouble(cache._cache))
+                Cache convert = new Cache(cache.Name, Convert.ToDouble(cache._cache))
                 {
                     RecacheTime = cache.RecacheTime,
                     AllowHardOverride = cache.AllowHardOverride,
@@ -101,7 +101,7 @@ namespace Slide
         {
             try
             {
-                Cache convert = new Cache(cache._cache.ToString())
+                Cache convert = new Cache(cache.Name, cache._cache.ToString())
                 {
                     RecacheTime = cache.RecacheTime,
                     AllowHardOverride = cache.AllowHardOverride,
