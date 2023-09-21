@@ -31,26 +31,15 @@ namespace Slide
 
             try
             {
-                // Convert Text to byte array
-                byte[] writeText = Encoding.ASCII.GetBytes(text);
+                string fileOpen = File.ReadAllText(loc);
 
-                fileInfo = new FileInfo(loc);
+                fileOpen = text;
 
-                file = fileInfo.OpenWrite();
-                // Write each byte to file
-                foreach (byte b in writeText)
-                {
-                    file.WriteByte(b);
-                }
-
+                File.WriteAllText(loc, fileOpen);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Failed to write file '{loc}'");
-            }
-            finally
-            {
-                file.Close();
             }
         }
 

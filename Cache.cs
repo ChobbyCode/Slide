@@ -30,6 +30,8 @@ namespace Slide
 
         internal bool _read = false;
 
+        internal string GroupFolder = "Slide/";
+
         /// <summary>
         /// THIS METHOD IS NOT FULLY FINISHED!
         /// 
@@ -42,6 +44,30 @@ namespace Slide
         // the cache timer should be updated
         internal DateTime _cacheUpdateTime { get; set; }
 
+
+        public Cache(string defaultName, dynamic defaultValue, string group)
+        {
+            // Sets default variables. Cache is not set by default so it can be null,
+            // and cache create time can be set
+            RecacheTime = 0;
+            _cacheUpdateTime = DateTime.Now;
+            CacheValue = "";
+
+            GroupFolder = group + "/";
+
+            Name = defaultName;
+
+            _cache = defaultValue;
+
+            RefreshArray();
+
+            SetValues();
+
+            if (AutoWriteCache)
+            {
+                this.WriteCache();
+            }
+        }
 
         public Cache(string defaultName, dynamic defaultValue) {
             // Sets default variables. Cache is not set by default so it can be null,
@@ -57,6 +83,11 @@ namespace Slide
             RefreshArray();
 
             SetValues();
+
+            if (AutoWriteCache)
+            {
+                this.WriteCache();
+            }
         }
 
         public Cache(string defaultName) {
@@ -70,6 +101,11 @@ namespace Slide
             RefreshArray();
 
             SetValues();
+
+            if (AutoWriteCache)
+            {
+                this.WriteCache();
+            }
         }
 
         public Cache()
@@ -81,6 +117,11 @@ namespace Slide
             _cache = "";
 
             RefreshArray();
+
+            if (AutoWriteCache)
+            {
+                this.WriteCache();
+            }
         }
 
         public virtual void SetValues()
@@ -141,6 +182,11 @@ namespace Slide
                 // Updates the cache timer
                 _cacheUpdateTime = DateTime.Now;
                 RefreshArray();
+            }
+
+            if (AutoWriteCache)
+            {
+                this.WriteCache();
             }
         }
 

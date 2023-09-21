@@ -38,7 +38,7 @@ namespace Slide
             {
                 FileWritter fileWritter = new FileWritter();
 
-                string CacheFolder = $@"C:\Users\{fileWritter.GetCurrentUser()}\Temp\Slide\Cache\";
+                string CacheFolder = $@"C:\Users\{fileWritter.GetCurrentUser()}\Temp\{cache.GroupFolder}\Cache\";
                 string FileLocation = CacheFolder + $@"{cache.Name}.json";
 
                 fileWritter.CreateSubDomains(CacheFolder);
