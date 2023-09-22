@@ -111,7 +111,29 @@ namespace Slide
                 }
                 catch
                 {
-                    throw new Exception("Failed to reach Cache from file");
+                    throw new Exception("Failed to read Cache from file");
+                }
+            }
+            return old;
+        }
+
+        public CacheArray ReadPreCache(string loc, CacheArray old)
+        {
+            if (!old._read)
+            {
+                return old;
+            }
+            if(File.Exists(loc))
+            {
+                string json = File.ReadAllText(loc);
+                try
+                {
+                    CacheArray readCache = JsonConvert.DeserializeObject<CacheArray>(json);
+                    return readCache;
+                }
+                catch
+                {
+                    throw new Exception("Failed to read Cache from file");
                 }
             }
             return old;

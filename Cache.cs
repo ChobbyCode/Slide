@@ -10,42 +10,12 @@ using System.IO;
 
 namespace Slide
 {
-    public class Cache
+    public class Cache : SlideBase
     {
-        public string Name {  get; set; }
-
-        public bool AllowHardOverride { get; set; } = false;
-
-        public bool AutoWriteCache { get; set; } = true;
-
-        // The cache variable
-        internal dynamic? _cache { get; set; }
-        // This variable can be set by the user but underlines how often a cache can be cached
-        // -4 means there is no limit and can always be cached
-        public double RecacheTime { get; set; }
-
-        public dynamic CacheValue { get; set; }
-
         internal bool _partOfArray { get; } = false;
 
-        internal bool _read = false;
 
-        internal string GroupFolder = "Slide/";
-
-        /// <summary>
-        /// THIS METHOD IS NOT FULLY FINISHED!
-        /// 
-        /// All Users or Current User use (A/C) for this
-        /// </summary>
-        public string CacheStoreType = "C";
-
-
-        // cacheUpdateTime is cacheCreateTime by default but everytime the cache is modified,
-        // the cache timer should be updated
-        internal DateTime _cacheUpdateTime { get; set; }
-
-
-        public Cache(string defaultName, dynamic defaultValue, string group)
+        public Cache(string defaultName, dynamic defaultValue, string group, string storeType)
         {
             // Sets default variables. Cache is not set by default so it can be null,
             // and cache create time can be set
@@ -53,20 +23,17 @@ namespace Slide
             _cacheUpdateTime = DateTime.Now;
             CacheValue = "";
 
-            GroupFolder = group + "/";
+            GroupFolder = group;
 
             Name = defaultName;
+
+            CacheStoreType = storeType;
 
             _cache = defaultValue;
 
             RefreshArray();
 
-            SetValues();
-
-            if (AutoWriteCache)
-            {
-                this.WriteCache();
-            }
+            SetValues(this);
         }
 
         public Cache(string defaultName, dynamic defaultValue) {
@@ -82,12 +49,7 @@ namespace Slide
 
             RefreshArray();
 
-            SetValues();
-
-            if (AutoWriteCache)
-            {
-                this.WriteCache();
-            }
+            SetValues(this);
         }
 
         public Cache(string defaultName) {
@@ -100,12 +62,7 @@ namespace Slide
 
             RefreshArray();
 
-            SetValues();
-
-            if (AutoWriteCache)
-            {
-                this.WriteCache();
-            }
+            SetValues(this);
         }
 
         public Cache()
@@ -124,55 +81,6 @@ namespace Slide
             }
         }
 
-        public virtual void SetValues()
-        {
-
-            FileWritter fileWritter = new FileWritter();
-
-            if (File.Exists($@"C:\Users\jacob\Temp\Slide\Cache\{Name}.json"))
-            {
-                _read = true;
-            }
-
-            if (_read)
-            {
-                if (OperatingSystem.IsWindows())
-                {
-                    string path = $@"C:\Users\jacob\Temp\Slide\Cache\{Name}.json";
-
-                    _cache = fileWritter.ReadPreCache(path, this).CacheValue;
-                    AllowHardOverride = fileWritter.ReadPreCache(path, this).AllowHardOverride;
-                    AutoWriteCache = fileWritter.ReadPreCache(path, this).AutoWriteCache;
-                    RecacheTime = fileWritter.ReadPreCache(path, this).RecacheTime;
-                    CacheValue = fileWritter.ReadPreCache(path, this).CacheValue;
-                    //_partOfArray = fileWritter.ReadPreCache(path, this)._partOfArray;
-                    _read = fileWritter.ReadPreCache(path, this)._read;
-                    CacheStoreType = fileWritter.ReadPreCache(path, this).CacheStoreType;
-                }
-            }
-        }
-
-
-        public virtual bool Recachable()
-        {
-            bool result = false;
-
-            if (RecacheTime == -4 || AllowHardOverride == true)
-            {
-                // Return true if -4 as that means we can always recache
-                result = true;
-            }
-
-            if (DateTime.Now > _cacheUpdateTime.Add(TimeSpan.FromMilliseconds(RecacheTime)) || _cache == null)
-            {
-                // If the conditions is met we can return true to recache
-                result = true;
-            }
-
-            // We can't recache :(
-            return result;
-        }
-
         public void Store(string data)
         {
             if(Recachable())
@@ -189,26 +97,5 @@ namespace Slide
                 this.WriteCache();
             }
         }
-
-        public virtual string GetCache()
-        {
-            RefreshArray();
-            return _cache;
-        }
-
-        public virtual string ToJSON()
-        {
-            RefreshArray();
-            return this.ConvertToJSON();
-        }        
-
-        internal void RefreshArray()
-        {
-            CacheValue = _cache;
-        }
-
-        
-
-        
     }
 }

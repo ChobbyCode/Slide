@@ -36,15 +36,30 @@ namespace Slide
         {
             if (OperatingSystem.IsWindows())
             {
-                FileWritter fileWritter = new FileWritter();
+                if (cache.CacheStoreType == "C")
+                {
+                    FileWritter fileWritter = new FileWritter();
 
-                string CacheFolder = $@"C:\Users\{fileWritter.GetCurrentUser()}\Temp\{cache.GroupFolder}\Cache\";
-                string FileLocation = CacheFolder + $@"{cache.Name}.json";
+                    //Users\{fileWritter.GetCurrentUser()}
+                    string CacheFolder = $@"C:\Users\{fileWritter.GetCurrentUser()}\Temp\{cache.GroupFolder}\Cache\";
+                    string FileLocation = CacheFolder + $@"{cache.Name}.json";
 
-                fileWritter.CreateSubDomains(CacheFolder);
-                fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
+                    fileWritter.CreateSubDomains(CacheFolder);
+                    fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
 
-                return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
+                    return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
+                }else if(cache.CacheStoreType == "A")
+                {
+                    FileWritter fileWritter = new FileWritter();
+
+                    string CacheFolder = $@"C:\Temp\{cache.GroupFolder}\Cache\";
+                    string FileLocation = CacheFolder + $@"{cache.Name}.json";
+
+                    fileWritter.CreateSubDomains(CacheFolder);
+                    fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
+
+                    return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
+                }
             }
 
             throw new Exception($"An instance of 'Slide.CacheConstructor' tried to call a function that is not supported on your Operating System: Write your own WriteFile function if you want to use WriteCache.");

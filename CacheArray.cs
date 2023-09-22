@@ -10,39 +10,26 @@ namespace Slide
     /// <summary>
     /// Collective cache array. 
     /// </summary>
-    public class CacheArray
+    public class CacheArray : SlideBase
     {
-        // Settings Variables
-        public string Name { get; set; }
-
-        public bool AllowHardOverride { get; set; } = false;
-
-        // Create and set value of cache array
-        private List<Cache> _cacheList { get; set; }
-
-        public List<Cache> ArrayValue { get; set; } = new List<Cache>();
-
         public CacheArray(string defaultName, List<Cache> DefaultValue)
         {
-            RefreshArray();
+            FileWritter fileWritter = new FileWritter();
 
-            // Make array not null
-            _cacheList = DefaultValue;
+            CacheArray b = fileWritter.ReadPreCache(@"C:\Users\jacob\Temp\Grandma\Cache\Plant.json", this);
 
-            RefreshArray();
-
-            Name = defaultName;
+            Console.WriteLine(CacheValue);
         }
 
         public IEnumerable<Cache> GetCacheList()
         {
-            return _cacheList.AsReadOnly();
+            return _cache.AsReadOnly();
         }
 
         public List<Cache> getArray()
         {
             RefreshArray();
-            return _cacheList;
+            return _cache;
         }
 
         public void Add(Cache d)
@@ -51,7 +38,7 @@ namespace Slide
             {
                 d.AllowHardOverride = true;
             }
-            _cacheList.Add(d);
+            _cache.Add(d);
             RefreshArray();
         }
 
@@ -63,7 +50,7 @@ namespace Slide
         public void SetFromPos(int loc, string val)
         {
             // Sets based of position
-            _cacheList[loc].Store(val);
+            _cache[loc].Store(val);
         }
 
         /// <summary>
@@ -75,11 +62,11 @@ namespace Slide
         {
             // Loops thru array to find the correct one
             int loop = 0;
-            foreach(Cache cache in _cacheList)
+            foreach(Cache cache in _cache)
             {
                 if(cache.Name == name)
                 {
-                    _cacheList[loop].Store(val);
+                    _cache[loop].Store(val);
                     return;
                 }
                 loop++;
@@ -94,7 +81,7 @@ namespace Slide
         public void SetNameFromPos (int loc, string val)
         {
             // Sets based of position
-            _cacheList[loc].Name = val;
+            _cache[loc].Name = val;
         }
 
         /// <summary>
@@ -106,28 +93,15 @@ namespace Slide
         {
             // Loops thru array to find the correct one
             int loop = 0;
-            foreach (Cache cache in _cacheList)
+            foreach (Cache cache in _cache)
             {
                 if (cache.Name == name)
                 {
-                    _cacheList[loop].Name = val;
+                    _cache[loop].Name = val;
                     return;
                 }
                 loop++;
             }
-        }
-
-        private void RefreshArray()
-        {
-            if (AllowHardOverride == true)
-            {
-                foreach (Cache cache in _cacheList)
-                {
-                    cache.AllowHardOverride = true;
-                }
-            }
-
-            ArrayValue = _cacheList;
         }
     }
 }
