@@ -42,50 +42,6 @@ namespace Slide
         internal DateTime _cacheUpdateTime { get; set; }
 
         /// <summary>
-        /// Base.
-        /// </summary>
-        public virtual void SetValues(Cache cache)
-        {
-            FileWritter fileWritter = new FileWritter();
-
-            if (File.Exists($@"C:\Users\jacob\Temp\{GroupFolder}\Cache\{Name}.json") && CacheStoreType == "C")
-            {
-                _read = true;
-            }
-            if (File.Exists($@"C:\Temp\{GroupFolder}\Cache\{Name}.json") && CacheStoreType == "A")
-            {
-                _read = true;
-            }
-
-            if (_read)
-            {
-                if (OperatingSystem.IsWindows())
-                {
-                    string path = "";
-
-                    if (CacheStoreType == "C")
-                    {
-                        path = $@"C:\Users\jacob\Temp\{GroupFolder}\Cache\{Name}.json";
-                    }
-                    else if (CacheStoreType == "A")
-                    {
-                        path = $@"C:\Temp\{GroupFolder}\Cache\{Name}.json";
-                    }
-
-
-                    _cache = fileWritter.ReadPreCache(path, cache).CacheValue;
-                    AllowHardOverride = fileWritter.ReadPreCache(path, cache).AllowHardOverride;
-                    AutoWriteCache = fileWritter.ReadPreCache(path, cache).AutoWriteCache;
-                    RecacheTime = fileWritter.ReadPreCache(path, cache).RecacheTime;
-                    CacheValue = fileWritter.ReadPreCache(path, cache).CacheValue;
-                    //_partOfArray = fileWritter.ReadPreCache(path, this)._partOfArray;
-                    _read = fileWritter.ReadPreCache(path, cache)._read;
-                    CacheStoreType = fileWritter.ReadPreCache(path, cache).CacheStoreType;
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets the current cache value
         /// </summary>
         public virtual string GetCache()

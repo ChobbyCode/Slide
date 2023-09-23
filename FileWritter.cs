@@ -93,28 +93,5 @@ namespace Slide
                 }
             }
         }
-
-        /*[SupportedOSPlatform ("windows")]*/
-        public Cache ReadPreCache(string loc, Cache old)
-        {
-            if (!old._read)
-            {
-                return old;
-            }
-            if(File.Exists(loc))
-            {
-                string json = File.ReadAllText(loc);
-                try
-                {
-                    Cache readCache = JsonConvert.DeserializeObject<Cache>(json);
-                    return readCache;
-                }
-                catch
-                {
-                    throw new Exception("Failed to read Cache from file");
-                }
-            }
-            return old;
-        }
     }
 }

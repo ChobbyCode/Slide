@@ -1,6 +1,6 @@
 ﻿namespace Slide
 {
-    internal class CacheArrayDes : SlideBase
+    public class CacheArrayDes : SlideBase
     {
         public List<Cache> CacheValue { get; set; }
     }

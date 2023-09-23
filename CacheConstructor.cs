@@ -19,10 +19,7 @@ namespace Slide
         /// </summary>
         public static string ConvertToJSON(this CacheArray data)
         {
-            foreach (Cache cache in data.CacheValue)
-            {
-                cache.RefreshArray();
-            }
+            data.RefreshArray();
 
             string json = JsonConvert.SerializeObject(data, Formatting.Indented);
 

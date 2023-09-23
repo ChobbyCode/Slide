@@ -12,20 +12,39 @@ namespace Slide
     {
         internal List<Cache> _cache { get; set; } = new List<Cache>();
 
-        public CacheArray(string defaultName, List<Cache> defaultValue) {
+        public CacheArray(string defaultName) {
             Name = defaultName;
-            _cache = defaultValue;
 
             SetValues(this);
+
+            if (AutoWriteCache)
+            {
+                this.WriteCache();
+            }
         }
     
-        public void Add(Cache cache)
+        public void Add(dynamic value)
         {
+            Cache cache = new Cache($"Element_{Name}_{_cache.Count()}", value, "poa", "poa"/*, true*/)
+            {
+                _partOfArray = true,
+            };
+
             _cache.Add(cache);
             if(AutoWriteCache)
             {
                 this.WriteCache();
             }
+        }
+
+        public virtual void RefreshArray()
+        {
+            foreach(Cache c in _cache)
+            {
+                c.RefreshArray();
+            }
+            
+            CacheValue = _cache;
         }
 
         /// <summary>

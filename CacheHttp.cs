@@ -28,14 +28,6 @@ namespace Slide.Web
             RefreshArray();
         }
 
-        public CacheHttp() : base()
-        {
-            _cache = "";
-            PullURL = "";
-
-            RefreshArray();
-        }
-
         public string GetPullURL()
         {
             return this.PullURL;
