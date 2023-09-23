@@ -3,104 +3,65 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
 namespace Slide
 {
-    /// <summary>
-    /// Collective cache array. 
-    /// </summary>
     public class CacheArray : SlideBase
     {
-        public CacheArray(string defaultName, List<Cache> DefaultValue)
-        {
-            FileWritter fileWritter = new FileWritter();
+        internal List<Cache> _cache { get; set; } = new List<Cache>();
 
-            CacheArray b = fileWritter.ReadPreCache(@"C:\Users\jacob\Temp\Grandma\Cache\Plant.json", this);
+        public CacheArray(string defaultName, List<Cache> defaultValue) {
+            Name = defaultName;
+            _cache = defaultValue;
 
-            Console.WriteLine(CacheValue);
+            SetValues(this);
         }
-
-        public IEnumerable<Cache> GetCacheList()
+    
+        public void Add(Cache cache)
         {
-            return _cache.AsReadOnly();
-        }
-
-        public List<Cache> getArray()
-        {
-            RefreshArray();
-            return _cache;
-        }
-
-        public void Add(Cache d)
-        {
-            if(AllowHardOverride)
+            _cache.Add(cache);
+            if(AutoWriteCache)
             {
-                d.AllowHardOverride = true;
-            }
-            _cache.Add(d);
-            RefreshArray();
-        }
-
-        /// <summary>
-        /// Sets a cache based on the position in the array
-        /// </summary>
-        /// <param name="loc">The position it is in the array</param>
-        /// <param name="val">What the cache will be set to</param>
-        public void SetFromPos(int loc, string val)
-        {
-            // Sets based of position
-            _cache[loc].Store(val);
-        }
-
-        /// <summary>
-        /// Sets the contents of a peice of Cache based on the name passed in
-        /// </summary>
-        /// <param name="name">The name of the cache</param>
-        /// <param name="val">What the cache will be set to</param>
-        public void SetFromName(string name, string val)
-        {
-            // Loops thru array to find the correct one
-            int loop = 0;
-            foreach(Cache cache in _cache)
-            {
-                if(cache.Name == name)
-                {
-                    _cache[loop].Store(val);
-                    return;
-                }
-                loop++;
+                this.WriteCache();
             }
         }
 
         /// <summary>
-        /// Renames the name of a cache from the position in the array
+        /// Load Cache from file. Slide automatically calls this, so there is no need to call it.
         /// </summary>
-        /// <param name="loc">The location where the element is in the array</param>
-        /// <param name="val">What the cache will be renamed to</param>
-        public void SetNameFromPos (int loc, string val)
+        public virtual void SetValues(CacheArray cache)
         {
-            // Sets based of position
-            _cache[loc].Name = val;
-        }
-
-        /// <summary>
-        /// Renames the name of a cache from the name of a cache
-        /// </summary>
-        /// <param name="name">Theh name of the cache which will be renamed</param>
-        /// <param name="val">What the cache will be renamed to</param>
-        public void SetNameFromName (string name, string val)
-        {
-            // Loops thru array to find the correct one
-            int loop = 0;
-            foreach (Cache cache in _cache)
+            if (File.Exists($@"C:\Users\jacob\Temp\{GroupFolder}\Cache\{Name}.json"))
             {
-                if (cache.Name == name)
+                _read = true;
+            }
+            if (File.Exists($@"C:\Temp\{GroupFolder}\Cache\{Name}.json"))
+            {
+                _read = true;
+            }
+
+            if (_read)
+            {
+                if (OperatingSystem.IsWindows())
                 {
-                    _cache[loop].Name = val;
-                    return;
+                    string path = $@"C:\Users\jacob\Temp\{GroupFolder}\Cache\{Name}.json";
+
+                    // Read File
+                    string json = File.ReadAllText($@"C:\Users\jacob\Temp\{GroupFolder}\Cache\{Name}.json");
+
+                    CacheArrayDes des = JsonConvert.DeserializeObject<CacheArrayDes>(json);
+
+                    _cache = des.CacheValue;
+                    AllowHardOverride = des.AllowHardOverride;
+                    AutoWriteCache = des.AutoWriteCache;
+                    RecacheTime = des.RecacheTime;
+                    CacheValue = des.CacheValue;
+                    //_partOfArray = fileWritter.ReadPreCache(path, this)._partOfArray;
+                    _read = des._read;
+                    CacheStoreType = des.CacheStoreType;
                 }
-                loop++;
             }
         }
     }

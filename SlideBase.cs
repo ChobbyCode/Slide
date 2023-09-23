@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace Slide
 {
@@ -19,7 +14,7 @@ namespace Slide
         /// <summary>
         /// Current Value Of Cache
         /// </summary>
-        public dynamic CacheValue { get; set; }
+        public virtual dynamic CacheValue { get; set; }
         /// <summary>
         /// What the name of the Cache Variable is. This also determines the name of the cache file.
         /// </summary>
@@ -35,9 +30,9 @@ namespace Slide
         // Will automatically be set. If it is false then there isn't already a preexisiting cache variable
         internal bool _read = false;
         // Internal variable cache variable
-        internal dynamic? _cache { get; set; }
+        internal virtual dynamic? _cache { get; set; }
         // The folder which the cache will be written to. I.e C:\temp\Chobby\Cache\Test.json. The chobby folder is the GroupFolder
-        internal string GroupFolder = "Slide/";
+        internal string GroupFolder = "Slide";
         /// <summary>
         /// How the cache will be written. C = for the current user only, A = for all users. (C stored in \Users\User\ dir, A stored is C:\ dir)
         /// </summary>
@@ -62,8 +57,6 @@ namespace Slide
                 _read = true;
             }
 
-            Console.WriteLine(_read);
-
             if (_read)
             {
                 if (OperatingSystem.IsWindows())
@@ -79,8 +72,6 @@ namespace Slide
                         path = $@"C:\Temp\{GroupFolder}\Cache\{Name}.json";
                     }
 
-                    Console.WriteLine(path);
-
 
                     _cache = fileWritter.ReadPreCache(path, cache).CacheValue;
                     AllowHardOverride = fileWritter.ReadPreCache(path, cache).AllowHardOverride;
@@ -92,14 +83,6 @@ namespace Slide
                     CacheStoreType = fileWritter.ReadPreCache(path, cache).CacheStoreType;
                 }
             }
-        }
-
-        /// <summary>
-        /// Base.
-        /// </summary>
-        public virtual void SetValues(CacheArray cache)
-        {
-
         }
 
         /// <summary>

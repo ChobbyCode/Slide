@@ -19,7 +19,7 @@ namespace Slide
         /// </summary>
         public static string ConvertToJSON(this CacheArray data)
         {
-            foreach (Cache cache in data.GetCacheList())
+            foreach (Cache cache in data.CacheValue)
             {
                 cache.RefreshArray();
             }
@@ -36,29 +36,31 @@ namespace Slide
         {
             if (OperatingSystem.IsWindows())
             {
-                if (cache.CacheStoreType == "C")
-                {
-                    FileWritter fileWritter = new FileWritter();
+                if (cache.Name != "" || cache.Name != null) {
+                    if (cache.CacheStoreType == "C")
+                    {
+                        FileWritter fileWritter = new FileWritter();
 
-                    //Users\{fileWritter.GetCurrentUser()}
-                    string CacheFolder = $@"C:\Users\{fileWritter.GetCurrentUser()}\Temp\{cache.GroupFolder}\Cache\";
-                    string FileLocation = CacheFolder + $@"{cache.Name}.json";
+                        //Users\{fileWritter.GetCurrentUser()}
+                        string CacheFolder = $@"C:\Users\{fileWritter.GetCurrentUser()}\Temp\{cache.GroupFolder}\Cache\";
+                        string FileLocation = CacheFolder + $@"{cache.Name}.json";
 
-                    fileWritter.CreateSubDomains(CacheFolder);
-                    fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
+                        fileWritter.CreateSubDomains(CacheFolder);
+                        fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
 
-                    return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
-                }else if(cache.CacheStoreType == "A")
-                {
-                    FileWritter fileWritter = new FileWritter();
+                        return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
+                    } else if (cache.CacheStoreType == "A")
+                    {
+                        FileWritter fileWritter = new FileWritter();
 
-                    string CacheFolder = $@"C:\Temp\{cache.GroupFolder}\Cache\";
-                    string FileLocation = CacheFolder + $@"{cache.Name}.json";
+                        string CacheFolder = $@"C:\Temp\{cache.GroupFolder}\Cache\";
+                        string FileLocation = CacheFolder + $@"{cache.Name}.json";
 
-                    fileWritter.CreateSubDomains(CacheFolder);
-                    fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
+                        fileWritter.CreateSubDomains(CacheFolder);
+                        fileWritter.WriteFile(FileLocation, cache.ConvertToJSON());
 
-                    return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
+                        return $"Wrote '{cache.GetType()}' to '{CacheFolder}'";
+                    }
                 }
             }
 
