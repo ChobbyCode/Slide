@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft;
-using System.IO;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Slide
 {
@@ -16,48 +6,20 @@ namespace Slide
     {
         internal bool _partOfArray { get; set; } = false;
 
-        public Cache(string defaultName, dynamic defaultValue, string group, string storeType/*, bool poa = false*/)
+        public Cache(string defaultName, dynamic defaultValue, string group = "Slide", string storeType = "C"/*, bool poa = false*/)
         {
-            // Sets default variables. Cache is not set by default so it can be null,
-            // and cache create time can be set
-            RecacheTime = 0;
-            _cacheUpdateTime = DateTime.Now;
-            CacheValue = "";
-
-            GroupFolder = group;
-
-            //_partOfArray = poa;
-
-            Name = defaultName;
-
-            CacheStoreType = storeType;
-
-            _cache = defaultValue;
-
-            RefreshArray();
-
-            SetValues(this);
-
-            if (!_partOfArray)
-            {
-                this.WriteCache();
-            }
-        }
-
-        public Cache(string defaultName, dynamic defaultValue) {
-            // Sets default variables. Cache is not set by default so it can be null,
-            // and cache create time can be set
-            RecacheTime = 0;
-            _cacheUpdateTime = DateTime.Now;
-            CacheValue = "";
-
-            Name = defaultName;
-
-            _cache = defaultValue;
-
-            RefreshArray();
-
-            SetValues(this);
+            /*
+             * Sets up the variables
+             */
+            this.RecacheTime = 0;
+            this._cacheUpdateTime = DateTime.Now;
+            this.CacheValue = "";
+            this.GroupFolder = group;
+            this.Name = defaultName;
+            this.CacheStoreType = storeType;
+            this._cache = defaultValue;
+            this.RefreshArray();
+            this.SetValues(this);
 
             if (!_partOfArray)
             {
